@@ -7,7 +7,6 @@
 const int COLS= 3;
 const int ROWS= 2;
 
-
 class Dialog : public QAbstractTableModel
 {
     Q_OBJECT
@@ -23,7 +22,7 @@ public:
     Qt::ItemFlags flags(const QModelIndex &index) const override;
 
 private:
-    QString m_gridData[ROWS][COLS];  //holds text entered into QTableView
+    QString m_gridData[ROWS][COLS];
 
 signals:
     void editCompleted(const QString &);

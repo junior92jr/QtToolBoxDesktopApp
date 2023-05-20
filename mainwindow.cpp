@@ -1,32 +1,36 @@
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
-#include "dialog.h"
 
 #include <QTableView>
+#include <QTreeView>
+#include <QStandardItemModel>
+#include <QStandardItem>
 
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
-    , tableView(new QTableView(this))
+    , treeView(new QTreeView(this))
+    , standardModel(new QStandardItemModel(this))
 {
-    setCentralWidget(tableView);
-    Dialog *myModel = new Dialog(this);
-    tableView->setModel(myModel);
+    setCentralWidget(treeView);
 
-    //transfer changes to the model to the window title
-    connect(myModel, &Dialog::editCompleted,
-            this, &MainWindow::showWindowTitle);
+    QList<QStandardItem *> preparedRow = prepareRow("first", "second", "third");
+    QStandardItem *item = standardModel->invisibleRootItem();
+
+    item->appendRow(preparedRow);
+
+    QList<QStandardItem *> secondRow = prepareRow("111", "222", "333");
+
+    preparedRow.first()->appendRow(secondRow);
+
+    treeView->setModel(standardModel);
+    treeView->expandAll();
 }
 
-MainWindow::~MainWindow()
+QList<QStandardItem *> MainWindow::prepareRow(const QString &first,
+                                              const QString &second,
+                                              const QString &third) const
 {
-    delete ui;
+    return {new QStandardItem(first),
+            new QStandardItem(second),
+            new QStandardItem(third)};
 }
-
-void MainWindow::showWindowTitle(const QString &title)
-{
-    setWindowTitle(title);
-}
-
-
